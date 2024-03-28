@@ -34,6 +34,9 @@ type AkashaBeam @createModel(accountRelation: LIST, description: "AKASHA Beam v0
   active: Boolean!
   createdAt: DateTime!
   nsfw: Boolean
+  approval: Boolean
+  aiRating: Int
+  userRating: Int
 }
 `
 }

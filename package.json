@@ -55,6 +55,7 @@
     "key-did-provider-ed25519": "^4.0.2",
     "key-did-resolver": "^4.0.0",
     "object-hash": "3.0.0",
+    "openai": "^4.29.2",
     "path-browserify": "1.0.1",
     "pino": "8.8.0",
     "pkh-did-resolver": "^1.2.0",

@@ -102,34 +102,38 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   if (beamReq.loading) return <EntryCardLoading />;
 
   return (
-    <EntryCard
-      entryData={processedEntryData}
-      authorProfile={{ data: profileData, loading, error }}
-      locale={'en'}
-      profileAnchorLink="/@akashaorg/app-profile"
-      sortedContents={sortedEntryContent}
-      isViewer={authenticatedDID === processedEntryData?.authorId}
-      showHiddenContent={true}
-      isLoggedIn={!!authenticatedDID}
-      itemType={EntityTypes.BEAM}
-      transformSource={transformSource}
-      onAvatarClick={onAvatarClick}
-      actionsRight={
-        <Extension
-          name={`example-app-fav_${beamId}`}
-          extensionData={{
-            itemId: beamId,
-          }}
-        />
-      }
-    >
-      {({ blockID }) => (
-        <ContentBlockRenderer
-          blockID={blockID}
-          onContentClick={handleContentClick}
-        />
-      )}
-    </EntryCard>
+    <>
+      <div>{"approval" in (entryData as any) && entryData["approval"]}</div>
+      <div>{"aiRating" in (entryData as any) && entryData["aiRating"]}</div>
+      <EntryCard
+        entryData={processedEntryData}
+        authorProfile={{ data: profileData, loading, error }}
+        locale={'en'}
+        profileAnchorLink="/@akashaorg/app-profile"
+        sortedContents={sortedEntryContent}
+        isViewer={authenticatedDID === processedEntryData?.authorId}
+        showHiddenContent={true}
+        isLoggedIn={!!authenticatedDID}
+        itemType={EntityTypes.BEAM}
+        transformSource={transformSource}
+        onAvatarClick={onAvatarClick}
+        actionsRight={
+          <Extension
+            name={`example-app-fav_${beamId}`}
+            extensionData={{
+              itemId: beamId,
+            }}
+          />
+        }
+      >
+        {({ blockID }) => (
+          <ContentBlockRenderer
+            blockID={blockID}
+            onContentClick={handleContentClick}
+          />
+        )}
+      </EntryCard>
+    </>
   );
 };
 

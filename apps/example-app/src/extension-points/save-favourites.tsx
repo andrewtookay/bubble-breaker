@@ -18,7 +18,7 @@ const SaveToFavsExtension: React.FC<RootExtensionProps> = (props) => {
   const {extensionData} = props;
 
   const handleRatingClick = () => {
-    console.log('Starring item with id:', extensionData.itemId);
+    console.log('Supporting item with id:', extensionData.itemId);
   }
 
   if (!extensionData.itemId) {
@@ -28,7 +28,7 @@ const SaveToFavsExtension: React.FC<RootExtensionProps> = (props) => {
 
   return (
     <>
-      <Button label={`Star`} onClick={handleRatingClick} />
+      <Button label={`It's a bubble breaker!!!`} onClick={handleRatingClick} />
     </>
   );
 }

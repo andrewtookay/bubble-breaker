@@ -37,3 +37,20 @@
   }
 
 }
+
+.bubble-article, .bubble-breaker {
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.bubble-article {
+  background: linear-gradient(to left, #f9f8eb, #becaa7);
+}
+
+.bubble-breaker {
+  background: linear-gradient(to left, #b98ae0, #75c6d4);
+}
+
+.article-title {
+  font-size: 32px;
+}

@@ -65,6 +65,9 @@ const TextBlockEditor: React.FC<
       return {
         response: {
           blockID: response.createAkashaContentBlock.document.id,
+          title: title,
+          content: content
+          // passing the fields in order to get them at beam creation
         },
         blockInfo: props.blockInfo,
         retryCount: retryCount.current,

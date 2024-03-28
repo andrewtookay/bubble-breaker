@@ -16,8 +16,10 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
   };
 
   const { data, loading, error, fetchMore } = useGetBeamsQuery({
-    variables: { first: 5, sorting: { createdAt: SortOrder.Desc } },
+    variables: { first: 10, sorting: { createdAt: SortOrder.Desc } },
   });
+
+  // process the beams and reputation computation here and trigger the smart contract minting
 
   const beams = React.useMemo(() => {
     return data?.akashaBeamIndex?.edges || [];
@@ -42,6 +44,44 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
 
   return (
     <Stack direction="column" spacing="gap-4">
+      <div className='bubble-article'>
+        <div className='article-title'>
+          In your bubble!
+        </div>
+        <div className='article-body'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </div>
+      <div className='bubble-article'>
+        <div className='article-title'>
+          Oh, yeah, give me that dopamine-rushing, self-centered confirmation!
+        </div>
+        <div className='article-body'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </div>
+      <div className='bubble-article'>
+        <div className='article-title'>
+          My bubble is so cool, and you're still in Web2
+        </div>
+        <div className='article-body'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </div>
+      <div className='bubble-article'>
+        <div className='article-title'>
+          And yet, you're still here
+        </div>
+        <div className='article-body'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </div>
+      <div className='bubble-breaker'>
+        <div className='article-title'>GM! Why is ETH Bucharest so lit!?</div>
+        <div className='article-body'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </div>
       <SimpleEditor onPublish={handleNewBeamPublished} />
       <SimpleAntenna
         beams={beams}
