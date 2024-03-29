@@ -66,7 +66,7 @@ export type BlockInstanceMethods = {
    * retryCount - optional number (retry counter)
    */
   createBlock: (arg: CreateContentBlock) => Promise<{
-    response: { blockID: string; error?: string };
+    response: { blockID: string; error?: string, title?: string, content?: string };
     blockInfo: BlockInfo;
     retryCount?: number;
   }>;

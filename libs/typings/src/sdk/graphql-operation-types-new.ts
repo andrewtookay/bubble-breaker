@@ -29,7 +29,7 @@ export type CreateBeamMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateBeamMutation = { createAkashaBeam?: { clientMutationId?: string | null, document: { id: string, reflectionsCount: number, active: boolean, version: any, createdAt: any, nsfw?: boolean | null, embeddedStream?: { label: string, embeddedID: any } | null, author: { id: string, isViewer: boolean }, content: Array<{ blockID: any, order: number }>, tags?: Array<{ labelType: string, value: string } | null> | null, reflections: { edges?: Array<{ cursor: string } | null> | null, pageInfo: { hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } } } | null };
+export type CreateBeamMutation = { createAkashaBeam?: { clientMutationId?: string | null, document: { id: string, reflectionsCount: number, active: boolean, version: any, createdAt: any, nsfw?: boolean | null, embeddedStream?: { label: string, embeddedID: any } | null, author: { id: string, isViewer: boolean }, content: Array<{ blockID: any, order: number }>, approval?: Boolean, aiRating?: number, tags?: Array<{ labelType: string, value: string } | null> | null, reflections: { edges?: Array<{ cursor: string } | null> | null, pageInfo: { hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } } } | null };
 
 export type UpdateBeamMutationVariables = Types.Exact<{
   i: Types.UpdateAkashaBeamInput;

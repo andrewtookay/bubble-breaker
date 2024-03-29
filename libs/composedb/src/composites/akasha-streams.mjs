@@ -48,6 +48,8 @@ type AkashaBeamStream @createModel(accountRelation: LIST, description: "Moderate
   createdAt: DateTime!
   status: ModerationStatus
   moderationID: StreamID
+  userRating: String @string(minLength:2, maxLength: 10)
+  numRatings: Int
 }
 
 type AkashaContentBlockStream @createModel(accountRelation: LIST, description: "Moderated Content Blocks v0.1") @createIndex(fields:[{path: "active"},{path: "blockID"}, {path: "createdAt"}, {path: "status"}, {path: "moderationID"}]){
@@ -107,6 +109,12 @@ type AkashaIndexedStream @createModel(accountRelation: LIST, description: "Index
   moderationID: StreamID
   indexType: String! @string(maxLength: 30)
   indexValue: String! @string(minLength:2, maxLength: 90)
+}
+
+type UserRating @createModel(accountRelation: LIST, description: "Moderated Beams list v0.1") @createIndex(fields:[{path: "userRating"},{path: "beamID"}]){
+  beamID: StreamID! @documentReference(model: "AkashaBeam")
+  userRating: Int
+  voter: DID! @documentAccount
 }
   `
 

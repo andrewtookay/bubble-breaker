@@ -338,6 +338,8 @@ export type AkashaBeamInput = {
   embeddedStream?: InputMaybe<AkashaBeamEmbeddedTypeInput>;
   mentions?: InputMaybe<Array<InputMaybe<Scalars['DID']['input']>>>;
   nsfw?: InputMaybe<Scalars['Boolean']['input']>;
+  approval?: InputMaybe<Scalars['Boolean']['input']>;
+  aiRating?: InputMaybe<Scalars['Int']['input']>;
   tags?: InputMaybe<Array<InputMaybe<AkashaBeamLabeledInput>>>;
 };
 

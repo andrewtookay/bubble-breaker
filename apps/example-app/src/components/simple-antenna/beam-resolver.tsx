@@ -16,6 +16,7 @@ import {
   useGetProfileByDidQuery,
 } from '@akashaorg/ui-awf-hooks/lib/generated/apollo';
 import { Extension } from '@akashaorg/ui-lib-extensions/lib/react/extension';
+import RatingButton from '../rating-button';
 
 export type BeamResolverProps = {
   beamId: string;
@@ -105,6 +106,7 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
     <>
       <div>{"approval" in (entryData as any) && entryData["approval"]}</div>
       <div>{"aiRating" in (entryData as any) && entryData["aiRating"]}</div>
+      <RatingButton></RatingButton>
       <EntryCard
         entryData={processedEntryData}
         authorProfile={{ data: profileData, loading, error }}

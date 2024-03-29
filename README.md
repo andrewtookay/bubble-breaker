@@ -1,11 +1,5 @@
 ### DEVELOPMENT
 
-Previously, I've tried changing the definitions in:
-CreateAkashaBeamInput
-CreateBeamMutation
-AkashaReflect
-AkashaBeamInput
-
 ---
 
 #### _Initial Setup Guide_

@@ -37,6 +37,8 @@ export const BeamFragmentMFragmentDoc = /*#__PURE__*/ gql`
   version
   createdAt
   nsfw
+  approval
+  aiRating
   reflections(last: 1) {
     edges {
       cursor
@@ -107,6 +109,8 @@ export const BeamFragmentDoc = /*#__PURE__*/ gql`
   version
   createdAt
   nsfw
+  approval
+  aiRating
   reflections(last: 1) {
     edges {
       cursor
