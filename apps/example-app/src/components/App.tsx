@@ -19,8 +19,6 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
     variables: { first: 10, sorting: { createdAt: SortOrder.Desc } },
   });
 
-  // process the beams and reputation computation here and trigger the smart contract minting
-
   const beams = React.useMemo(() => {
     return data?.akashaBeamIndex?.edges || [];
   }, [data]);
@@ -43,6 +41,7 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
   };
 
   return (
+    <>
     <Stack direction="column" spacing="gap-4">
       <div className='bubble-article'>
         <div className='article-title'>
@@ -89,6 +88,7 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
         handleFetchMore={handleFetchMore}
       />
     </Stack>
+    </>
   );
 };
 

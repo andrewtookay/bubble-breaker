@@ -45,7 +45,7 @@ declare const __LOAD_LOCAL_SOURCES__: boolean;
   }
 
   const loaderConfig: WorldConfig = {
-    title: 'ETHBucharest World',
+    title: 'What bubbles will you be breaking today?',
     // main layout (shell)
     layout: '@akashaorg/ui-widget-layout',
     // define an app that will load at root '/' path

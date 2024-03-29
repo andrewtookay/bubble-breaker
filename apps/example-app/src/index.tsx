@@ -31,7 +31,7 @@ export const register = (opts: IntegrationRegistrationOptions): IAppConfig => {
     mountsIn: opts.layoutConfig?.applicationSlotId,
     i18nNamespace: ['app-example'],
     menuItems: {
-      label: 'Example App',
+      label: 'Bubble Breaker',
       type: MenuItemType.App,
       logo: { type: LogoTypeSource.ICON, value: <GlobeAltIcon /> },
       area: [MenuItemAreaType.AppArea],
