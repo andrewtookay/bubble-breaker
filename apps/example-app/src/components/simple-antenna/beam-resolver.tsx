@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import EntryCardLoading from '@akashaorg/design-system-components/lib/components/Entry/EntryCardLoading';
 import EntryCard from '@akashaorg/design-system-components/lib/components/Entry/EntryCard';
 import ContentBlockRenderer from './content-block-renderer';
@@ -15,14 +15,15 @@ import {
   useGetBeamByIdQuery,
   useGetProfileByDidQuery,
 } from '@akashaorg/ui-awf-hooks/lib/generated/apollo';
-import { Extension } from '@akashaorg/ui-lib-extensions/lib/react/extension';
 import RatingButton from '../rating-button';
+import getSDK from "@akashaorg/awf-sdk";
 
 export type BeamResolverProps = {
   beamId: string;
 };
 const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   const { beamId } = props;
+  const [userRating, setUserRating] = useState(0);
 
   /**
    * this hook is used to fetch the authenticated user's credentials
@@ -32,6 +33,16 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
    */
   const { data } = useGetLogin();
   const authenticatedDID = data?.id;
+  const sdk = getSDK();
+
+  useEffect(() => {
+    computeUserRating();
+  }, [beamId]);
+
+  async function computeUserRating() {
+    const response = await sdk.services.gql.client.GetUserRatings({ first: 100, filters: { where: { beamID: { equalTo: beamId}}}});
+    console.log(response);
+  }
 
   /**
    * this hook will fetch the content of a beam (an entry) by its id
@@ -48,6 +59,8 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
     beamReq.data?.node && hasOwn(beamReq.data.node, 'id')
       ? beamReq.data.node
       : null;
+
+  console.log(entryData);
 
   /**
    * this mapping is used to adapt the data coming from the hook
@@ -104,9 +117,6 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
 
   return (
     <>
-      <div>{"approval" in (entryData as any) && entryData["approval"]}</div>
-      <div>{"aiRating" in (entryData as any) && entryData["aiRating"]}</div>
-      <RatingButton></RatingButton>
       <EntryCard
         entryData={processedEntryData}
         authorProfile={{ data: profileData, loading, error }}
@@ -120,12 +130,18 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
         transformSource={transformSource}
         onAvatarClick={onAvatarClick}
         actionsRight={
-          <Extension
+          <div className='bottom-row'>
+            <div>
+              <div>{"approval" in (entryData as any) && entryData["approval"]}</div>
+              <div className='ai-rating'>🤖 {"aiRating" in (entryData as any) && entryData["aiRating"]}✖️🔨</div>
+            </div>
+            <RatingButton beamId={beamId}></RatingButton>
+            {/* <Extension
             name={`example-app-fav_${beamId}`}
             extensionData={{
               itemId: beamId,
-            }}
-          />
+            }} /> */}
+          </div>
         }
       >
         {({ blockID }) => (

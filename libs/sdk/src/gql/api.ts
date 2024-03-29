@@ -474,6 +474,17 @@ export const CreateBeamDocument = /*#__PURE__*/ gql`
   }
 }
     ${BeamFragmentMFragmentDoc}`;
+export const CreateUserRatingDocument = /*#__PURE__*/ gql`
+    mutation CreateUserRating($i: CreateUserRatingInput!) {
+  createUserRating(input: $i) {
+    document {
+      beamID
+      userRating
+      id
+    }
+    clientMutationId
+  }
+}`;
 export const UpdateBeamDocument = /*#__PURE__*/ gql`
     mutation UpdateBeam($i: UpdateAkashaBeamInput!) {
   updateAkashaBeam(input: $i) {
@@ -563,6 +574,27 @@ export const GetBeamsDocument = /*#__PURE__*/ gql`
   }
 }
     ${BeamFragmentDoc}`;
+export const GetUserRatingsDocument = /*#__PURE__*/ gql`
+    query GetUserRatings($first: Int, $filters: UserRatingFiltersInput) {
+  userRatingIndex(
+    first: $first
+    filters: $filters
+  ) {
+    edges {
+      node {
+        userRating
+        beamID
+      }
+      cursor
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}`;
 export const GetBeamsByAuthorDidDocument = /*#__PURE__*/ gql`
     query GetBeamsByAuthorDid($id: ID!, $after: String, $before: String, $first: Int, $last: Int, $filters: AkashaBeamFiltersInput, $sorting: AkashaBeamSortingInput) {
   node(id: $id) {
@@ -1438,6 +1470,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     CreateBeam(variables: Types.CreateBeamMutationVariables, options?: C): Promise<Types.CreateBeamMutation> {
       return requester<Types.CreateBeamMutation, Types.CreateBeamMutationVariables>(CreateBeamDocument, variables, options) as Promise<Types.CreateBeamMutation>;
+    },
+    CreateUserRating(variables: { i: { content: { beamID: string, userRating: number }}}, options?: C): Promise<any> {
+      return requester<any, any>(CreateUserRatingDocument, variables, options) as Promise<any>;
+    },
+    GetUserRatings(variables: { first: number, filters: any }, options?: C): Promise<any> {
+      return requester<any, any>(GetUserRatingsDocument, variables, options) as Promise<any>;
     },
     UpdateBeam(variables: Types.UpdateBeamMutationVariables, options?: C): Promise<Types.UpdateBeamMutation> {
       return requester<Types.UpdateBeamMutation, Types.UpdateBeamMutationVariables>(UpdateBeamDocument, variables, options) as Promise<Types.UpdateBeamMutation>;

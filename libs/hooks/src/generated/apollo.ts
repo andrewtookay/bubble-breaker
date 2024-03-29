@@ -766,6 +766,28 @@ export const GetBeamsDocument = /*#__PURE__*/ gql`
 }
     ${BeamFragmentDoc}`;
 
+export const GetUserRatingsDocument = /*#__PURE__*/ gql`
+    query GetUserRatings($first: Int, $filters: AkashaBeamFiltersInput) {
+  akashaBeamIndex(
+    first: $first
+    filters: $filters
+  ) {
+    edges {
+      node {
+        ...BeamFragment
+      }
+      cursor
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    ${BeamFragmentDoc}`;
+
 /**
  * __useGetBeamsQuery__
  *

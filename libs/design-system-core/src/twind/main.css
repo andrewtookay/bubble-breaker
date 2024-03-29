@@ -67,3 +67,13 @@
 .star:hover {
   transform: scale(1.1);
 }
+
+.bottom-row {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+.ai-rating {
+
+}

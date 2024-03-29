@@ -722,6 +722,10 @@ export type AkashaFollowFiltersInput = {
   where?: InputMaybe<AkashaFollowObjectFilterInput>;
 };
 
+export type UserRatingFiltersInput = {
+  where?: InputMaybe<{beamID?: InputMaybe<StringValueFilterInput>}>;
+};
+
 export type AkashaFollowInput = {
   isFollowing: Scalars['Boolean']['input'];
   profileID: Scalars['CeramicStreamID']['input'];

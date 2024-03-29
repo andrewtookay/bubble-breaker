@@ -1,6 +1,5 @@
 import { useState } from "react";
 import React from "react";
-import getSDK from "@akashaorg/awf-sdk";
 
 const DEFAULT_COUNT = 5;
 const DEFAULT_ICON = "🔨";
@@ -13,21 +12,17 @@ export type RatingProps = {
     icon?: string | null;
     color?: string | null;
     iconSize?: number | null;
-    beamId?: string | null;
   };
 
 const RatingButton: React.FC<RatingProps> = (props) => {
-  const { count, defaultRating, icon, color, iconSize, beamId } = props;
+  const { count, defaultRating, icon, color, iconSize } = props;
   const [rating, setRating] = useState(defaultRating);
   const [temporaryRating, setTemporaryRating] = useState(0);
-  const sdk = getSDK();
 
   let stars = Array(count || DEFAULT_COUNT).fill(icon || DEFAULT_ICON);
 
-  const handleClick = async (rating) => {
+  const handleClick = (rating) => {
     setRating(rating);
-    const response = await sdk.services.gql.client.CreateUserRating({i: {content: {beamID: beamId, userRating: rating}}});
-    console.log(response);
     localStorage.setItem("starRating", rating);
   };
 
