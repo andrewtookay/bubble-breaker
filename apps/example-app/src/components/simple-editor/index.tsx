@@ -91,7 +91,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({ onPublish }) => {
           variant="primary"
           disabled={isPublishing}
           customStyle="flex place-self-end"
-          label={isPublishing ? 'Beaming...' : 'Beam it'}
+          label={isPublishing ? 'Breaking...' : 'Break it'}
           onClick={handleSubmit}
         />
       </>

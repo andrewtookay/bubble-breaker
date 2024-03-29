@@ -23,7 +23,8 @@ export type BeamResolverProps = {
 };
 const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   const { beamId } = props;
-  const [userRating, setUserRating] = useState(0);
+  const [ownRating, setOwnRating] = useState(0);
+  const [userRating, setUserRating] = useState(-1);
 
   /**
    * this hook is used to fetch the authenticated user's credentials
@@ -36,13 +37,47 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   const sdk = getSDK();
 
   useEffect(() => {
-    computeUserRating();
+    if (authenticatedDID) {
+      computeUserRating();
+    }
+  }, [beamId, authenticatedDID]);
+
+  useEffect(() => {
+    if (userRating != 0) {
+      setUserRating(-1);
+    }
+    if (ownRating != 0) {
+      setOwnRating(0);
+    }
   }, [beamId]);
 
   async function computeUserRating() {
-    const response = await sdk.services.gql.client.GetUserRatings({ first: 100, filters: { where: { beamID: { equalTo: beamId}}}});
-    console.log(response);
+    const response = await sdk.services.gql.client.GetUserRatings({ first: 100, filters: { where: { beamID: { equalTo: beamId }}}});
+
+    let totalRating: number = 0;
+    const ratings = response.userRatingIndex.edges;
+
+    for (const rating of ratings) {
+      console.log("signed user", authenticatedDID);
+      console.log("user from rating", rating.node.voter.id);
+      if (rating.node.voter.id == authenticatedDID) {
+        setOwnRating(rating.node.userRating);
+      }
+      totalRating += rating.node.userRating;
+    }
+
+    if (totalRating != 0) {
+      const computedUserRating = totalRating / response.userRatingIndex.edges.length;
+      console.log(computedUserRating);
+      setUserRating(parseInt(computedUserRating.toFixed(0)));
+    } else {
+      console.log("no user ratings");
+    }
   }
+
+  useEffect(() => {
+    console.log(userRating, ownRating);
+  }, [userRating, ownRating]);
 
   /**
    * this hook will fetch the content of a beam (an entry) by its id
@@ -59,8 +94,6 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
     beamReq.data?.node && hasOwn(beamReq.data.node, 'id')
       ? beamReq.data.node
       : null;
-
-  console.log(entryData);
 
   /**
    * this mapping is used to adapt the data coming from the hook
@@ -130,12 +163,14 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
         transformSource={transformSource}
         onAvatarClick={onAvatarClick}
         actionsRight={
+          "approval" in (entryData as any) && entryData["approval"] && authenticatedDID &&
           <div className='bottom-row'>
-            <div>
-              <div>{"approval" in (entryData as any) && entryData["approval"]}</div>
-              <div className='ai-rating'>🤖 {"aiRating" in (entryData as any) && entryData["aiRating"]}✖️🔨</div>
+            <div className='flex-row'>
+              <span className='rating'> {"aiRating" in (entryData as any) && <>🤖&nbsp;<span>{entryData["aiRating"]}</span></>}</span>
+              &nbsp;&nbsp;
+              {userRating != -1 && <span className='rating'>🧑&nbsp;<span>{userRating}</span></span>}
             </div>
-            <RatingButton beamId={beamId}></RatingButton>
+            <RatingButton beamId={beamId} defaultRating={ownRating} onChange={() => computeUserRating()}></RatingButton>
             {/* <Extension
             name={`example-app-fav_${beamId}`}
             extensionData={{

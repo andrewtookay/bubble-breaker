@@ -584,6 +584,9 @@ export const GetUserRatingsDocument = /*#__PURE__*/ gql`
       node {
         userRating
         beamID
+        voter {
+          id
+        }
       }
       cursor
     }

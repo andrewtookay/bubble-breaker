@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import getSDK from "@akashaorg/awf-sdk";
 
@@ -14,21 +14,25 @@ export type RatingProps = {
     color?: string | null;
     iconSize?: number | null;
     beamId?: string | null;
+    onChange?: () => void;
   };
 
 const RatingButton: React.FC<RatingProps> = (props) => {
-  const { count, defaultRating, icon, color, iconSize, beamId } = props;
+  const { count, defaultRating, icon, color, iconSize, beamId, onChange } = props;
   const [rating, setRating] = useState(defaultRating);
   const [temporaryRating, setTemporaryRating] = useState(0);
   const sdk = getSDK();
+
+  useEffect(() => {
+    setRating(defaultRating);
+  }, [defaultRating]);
 
   let stars = Array(count || DEFAULT_COUNT).fill(icon || DEFAULT_ICON);
 
   const handleClick = async (rating) => {
     setRating(rating);
     const response = await sdk.services.gql.client.CreateUserRating({i: {content: {beamID: beamId, userRating: rating}}});
-    console.log(response);
-    localStorage.setItem("starRating", rating);
+    onChange();
   };
 
   return (

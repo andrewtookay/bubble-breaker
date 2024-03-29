@@ -59,7 +59,7 @@ export const useEditorBlocks = () => {
         // get the title and content fields from blk
 
         const completion = await openai.chat.completions.create({
-          messages: [{ role: "system", content: "You are a comment curator for an emerging social media platform that validates healthy and argumented conversation. You will receive a title and content, you have to first give it an approval, and then a rating. If the title and comment do not seem argumented or hateful, do not approve them. Then rate or argumantation from 0 to 5, judging by number of sources listed, general flow of message and so on. Your returned message should be of format { \"approval\": true/false, \"rating\": 0 to 10 (without decimals) }" },
+          messages: [{ role: "system", content: "You are a comment curator for an emerging social media platform that validates healthy and argumented conversation. You will receive a title and content, you have to first give it an approval, and then a rating. If the title and comment do not seem argumented or they are hateful or seem like an unhealthy conversation, do not approve them. Then, rate the message from 0 to 5, judging by number of sources listed, general flow of message, cleanliness and so on. Your returned message should be of the format { \"approval\": true/false, \"rating\": 0 to 5 (without decimals) }" },
                      { role: "user", content: `Title: ${blk.response.title} Content: ${blk.response.content}`}
                     ],
           model: "gpt-3.5-turbo",

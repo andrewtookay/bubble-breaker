@@ -69,11 +69,25 @@
 }
 
 .bottom-row {
+  width: 100%;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
 }
 
-.ai-rating {
+.rating {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.rating span {
+  font-size: 24px;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  flex-flow: row;
 }
