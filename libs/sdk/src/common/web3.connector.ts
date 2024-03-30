@@ -35,7 +35,7 @@ class Web3Connector {
     rinkeby: 4,
     goerli: 5,
     kovan: 42,
-    sepolia: 11155111,
+    sepolia: 84532,
   });
   private _config: AWF_Config;
   /*
@@ -78,8 +78,8 @@ class Web3Connector {
         chainId: this.networkId.sepolia,
         name: 'Ethereum',
         currency: 'ETH',
-        explorerUrl: 'https://sepolia.etherscan.io/',
-        rpcUrl: 'https://rpc2.sepolia.org',
+        explorerUrl: 'https://sepolia-explorer.base.org',
+        rpcUrl: 'https://sepolia.base.org',
       },
     ];
 

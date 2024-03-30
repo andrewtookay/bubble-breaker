@@ -91,3 +91,28 @@
   align-items: center;
   flex-flow: row;
 }
+
+.flex-column {
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+}
+
+.nft-row {
+  margin-top: 10px;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+.nft-separator {
+  margin: 10px 0px;
+}
+
+.nft-button {
+  border-radius: 8px;
+  background-color: #b98ae0;
+  color: white;
+  margin: 4px 0px;
+  width: 200px;
+}
