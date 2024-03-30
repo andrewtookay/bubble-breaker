@@ -37,11 +37,13 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
   const handleUpdateMintableNfts = async () => {
     try {
+      console.log(ownRating);
+      console.log("got here 0");
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/update-mintable-nfts`, {
         address: ethereumAddress,
         rating: ownRating
       });
-      checkMintableNfts();
+      console.log("got here 1");
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -50,11 +52,13 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
   const checkMintableNfts = async () => {
     try {
+      console.log("got here 2");
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/can-mint`, {
         address: ethereumAddress
       });
+      console.log("got here 3");
       console.log(response.data);
-      setCanMint(response.data.length > 0);
+      setCanMint(response.data.mintableNFTs.length > 0);
     } catch (error) {
       console.error(error);
     }
@@ -90,7 +94,7 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
   useEffect(() => {
     if (ethereumAddress) {
-      checkMintableNfts();
+      //checkMintableNfts();
       updateNfts();
     }
   }, [ethereumAddress]);
@@ -101,6 +105,8 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
       <div className='flex-column'>
         <div className="nft-separator">NFT Actions</div>
         <button className='nft-button' onClick={handleUpdateMintableNfts}>Update Mintable NFTs</button>
+        <button className='nft-button' onClick={checkMintableNfts}>Check Mintable NFTs</button>
+
         { canMint && <button className='nft-button' onClick={handleMintNfts}>Mint NFTs</button> }
         <div className="nft-separator">Your NFTs</div>
         <div className='nft-row'>
