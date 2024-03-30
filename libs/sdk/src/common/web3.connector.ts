@@ -27,7 +27,7 @@ class Web3Connector {
   #w3modal: Web3Modal;
   #currentProviderType: string | undefined | null;
   readonly network = 'sepolia';
-  #networkId = '0xaa36a7';
+  #networkId = '0x14a34';
   // mapping for network name and ids
   readonly networkId = Object.freeze({
     mainnet: 1,

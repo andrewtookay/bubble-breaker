@@ -25,25 +25,21 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
         if (beam.node.aiRating) {
           ownRating += beam.node.aiRating;
         }
-        if (beam.node.userRating) {
-          ownRating += beam.node.userRating;
-        }
       }
 
       return ownRating;
-    } else 
-    return 0;
+    } else {
+      return 0;
+    }
   }, [data]);
 
   const handleUpdateMintableNfts = async () => {
     try {
       console.log(ownRating);
-      console.log("got here 0");
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/update-mintable-nfts`, {
         address: ethereumAddress,
         rating: ownRating
       });
-      console.log("got here 1");
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -52,11 +48,9 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
   const checkMintableNfts = async () => {
     try {
-      console.log("got here 2");
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/can-mint`, {
         address: ethereumAddress
       });
-      console.log("got here 3");
       console.log(response.data);
       setCanMint(response.data.mintableNFTs.length > 0);
     } catch (error) {
@@ -94,7 +88,7 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
   useEffect(() => {
     if (ethereumAddress) {
-      //checkMintableNfts();
+      checkMintableNfts();
       updateNfts();
     }
   }, [ethereumAddress]);

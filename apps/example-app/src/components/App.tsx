@@ -41,7 +41,6 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
   };
 
   return (
-    <>
     <Stack direction="column" spacing="gap-4">
       <div className='bubble-article'>
         <div className='article-title'>
@@ -88,7 +87,6 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
         handleFetchMore={handleFetchMore}
       />
     </Stack>
-    </>
   );
 };
 
