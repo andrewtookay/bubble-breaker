@@ -12,8 +12,9 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
   const ethereumAddress = loginData?.data?.ethAddress;
   const authenticatedDID = loginData?.data?.id;
   const [ipfsHashes, setIpfsHashes] = useState([]);
-  const [userRating, setUserRating] = useState(0);
+  const [totalRating, setTotalRating] = useState(0);
   const [canMint, setCanMint] = useState(false);
+  const [canUpdateMintable, setCanUpdateMintable] = useState(false);
   const sdk = getSDK();
 
   const { data, loading, error } = useGetBeamsByAuthorDidQuery({
@@ -25,6 +26,15 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
   }, [data]);
 
   const computeUserRating = async () => {
+    let aiRating = 0;
+
+    for (const beam of beams) {
+      if (beam.node.aiRating) {
+        aiRating += beam.node.aiRating;
+      }
+    }
+
+    console.log("total AI rating: ", aiRating);
     const beamIds = beams.map(beam => beam.node.id);
     console.log("beamIds:", beamIds);
     
@@ -44,39 +54,27 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     }, {});
     console.log("ratingsByBeamId:", ratingsByBeamId);
 
-    let sumOfAverages = 0;
+    let userRating = 0;
     for (const beamId in ratingsByBeamId) {
       const ratings = ratingsByBeamId[beamId];
       const totalRating = ratings.reduce((sum, rating) => sum + rating.userRating, 0);
       const averageRating = parseInt((totalRating / ratings.length).toString());
-      sumOfAverages += averageRating;
+      userRating += averageRating;
     }
 
-    console.log("total user rating: ", sumOfAverages);
-    setUserRating(sumOfAverages);
+    console.log("user rating: ", userRating);
+    console.log("total rating: ", aiRating + userRating);
+    setTotalRating(aiRating + userRating);
   };
-
-  const aiRating = React.useMemo(() => {
-    let aiRating = 0;
-
-    for (const beam of beams) {
-      if (beam.node.aiRating) {
-        aiRating += beam.node.aiRating;
-      }
-    }
-
-    console.log("total AI rating: ", aiRating);
-    return aiRating;
-  }, [beams]);
 
   const handleUpdateMintableNfts = async () => {
     try {
-      console.log(aiRating);
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/update-mintable-nfts`, {
         address: ethereumAddress,
-        rating: aiRating
+        rating: totalRating
       });
       console.log(response.data);
+      checkMintableNfts();
     } catch (error) {
       console.error(error);
     }
@@ -101,6 +99,7 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
       });
       console.log(response.data.ipfsHashes);
       setIpfsHashes((prevState) => [...prevState, ...response.data.ipfsHashes]);
+      setCanMint(false);
     } catch (error) {
       console.error(error);
     }
@@ -133,21 +132,38 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     computeUserRating();
   }, [beams]);
 
+  useEffect(() => {
+    let numMintable = 0;
+    if (totalRating > 60) {
+      numMintable = 3;
+    } else if (totalRating > 30) {
+      numMintable = 2;
+    } else if (totalRating > 10) {
+      numMintable = 1;
+    }
+
+    setCanUpdateMintable(numMintable > ipfsHashes.length);
+  }, [ipfsHashes, totalRating]);
+
   return (
     <Card customStyle="flex place-self-center">
       <Text align="center">🔨🔥 GM ETH Bucharest! This is the Bubble Breaker! 🔥🔨</Text>
       <div className='flex-column'>
-        <div className="nft-separator">
-          <Text align="center">Total rating: {userRating + aiRating}</Text>
-        </div>
-        <div className="nft-separator">NFT Actions</div>
-        <button className='nft-button' onClick={handleUpdateMintableNfts}>Update Mintable NFTs</button>
-        <button className='nft-button' onClick={checkMintableNfts}>Check Mintable NFTs</button>
+        { totalRating != 0 &&
+          <div className="nft-separator">
+            <Text align="center">Total rating: {totalRating}</Text>
+          </div>
+        }
+        { canUpdateMintable && <button className='nft-button' onClick={handleUpdateMintableNfts}>Update Mintable NFTs</button> }
         { canMint && <button className='nft-button' onClick={handleMintNfts}>Mint NFTs</button> }
-        <div className="nft-separator">Your NFTs</div>
-        <div className='nft-row'>
-          {ipfsHashes.map(ipfsHash => <img src={`https://gateway.pinata.cloud/ipfs/${ipfsHash}`} width={90} height={90}/>)}
-        </div>
+        { ipfsHashes.length != 0 &&
+          <>
+            <div className="nft-separator">Your NFTs</div>
+            <div className='nft-row'>
+              {ipfsHashes.map(ipfsHash => <img src={`https://gateway.pinata.cloud/ipfs/${ipfsHash}`} width={90} height={90}/>)}
+            </div>
+          </>
+        }
       </div>
     </Card>
   );
