@@ -14,11 +14,12 @@ export type RatingProps = {
     color?: string | null;
     iconSize?: number | null;
     beamId?: string | null;
+    ratingId?: String | null;
     onChange?: () => void;
   };
 
 const RatingButton: React.FC<RatingProps> = (props) => {
-  const { count, defaultRating, icon, color, iconSize, beamId, onChange } = props;
+  const { count, defaultRating, icon, color, iconSize, beamId, ratingId, onChange } = props;
   const [rating, setRating] = useState(defaultRating);
   const [temporaryRating, setTemporaryRating] = useState(0);
   const sdk = getSDK();
@@ -31,7 +32,11 @@ const RatingButton: React.FC<RatingProps> = (props) => {
 
   const handleClick = async (rating) => {
     setRating(rating);
-    const response = await sdk.services.gql.client.CreateUserRating({i: {content: {beamID: beamId, userRating: rating}}});
+    if (defaultRating == -1) {
+      const response = await sdk.services.gql.client.CreateUserRating({i: {content: {beamID: beamId, userRating: rating}}});
+    } else {
+      const response = await sdk.services.gql.client.UpdateUserRating({i: { id: ratingId, content: { beamID: beamId, userRating: rating }}});
+    }
     onChange();
   };
 

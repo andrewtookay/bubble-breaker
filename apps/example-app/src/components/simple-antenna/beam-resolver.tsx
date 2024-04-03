@@ -24,6 +24,7 @@ export type BeamResolverProps = {
 const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   const { beamId } = props;
   const [ownRating, setOwnRating] = useState(0);
+  const [ownRatingId, setOwnRatingId] = useState(null);
   const [userRating, setUserRating] = useState(-1);
 
   /**
@@ -62,6 +63,7 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
       console.log("user from rating", rating.node.voter.id);
       if (rating.node.voter.id == authenticatedDID) {
         setOwnRating(rating.node.userRating);
+        setOwnRatingId(rating.node.id);
       }
       totalRating += rating.node.userRating;
     }
@@ -170,7 +172,7 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
               &nbsp;&nbsp;
               {userRating != -1 && <span className='rating'>🧑&nbsp;<span>{userRating}</span></span>}
             </div>
-            <RatingButton beamId={beamId} defaultRating={ownRating} onChange={() => computeUserRating()}></RatingButton>
+            <RatingButton beamId={beamId} defaultRating={ownRating} ratingId={ownRatingId} onChange={() => computeUserRating()}></RatingButton>
             {/* <Extension
             name={`example-app-fav_${beamId}`}
             extensionData={{

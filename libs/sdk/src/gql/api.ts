@@ -485,6 +485,17 @@ export const CreateUserRatingDocument = /*#__PURE__*/ gql`
     clientMutationId
   }
 }`;
+export const UpdateUserRatingDocument = /*#__PURE__*/ gql`
+    mutation UpdateUserRating($i: UpdateUserRatingInput!) {
+  updateUserRating(input: $i) {
+    document {
+      beamID
+      userRating
+      id
+    }
+    clientMutationId
+  }
+}`;
 export const UpdateBeamDocument = /*#__PURE__*/ gql`
     mutation UpdateBeam($i: UpdateAkashaBeamInput!) {
   updateAkashaBeam(input: $i) {
@@ -582,6 +593,7 @@ export const GetUserRatingsDocument = /*#__PURE__*/ gql`
   ) {
     edges {
       node {
+        id
         userRating
         beamID
         voter {
@@ -1476,6 +1488,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     CreateUserRating(variables: { i: { content: { beamID: string, userRating: number }}}, options?: C): Promise<any> {
       return requester<any, any>(CreateUserRatingDocument, variables, options) as Promise<any>;
+    },
+    UpdateUserRating(variables: { i: { id: String, content: { beamID: string, userRating: number }}}, options?: C): Promise<any> {
+      return requester<any, any>(UpdateUserRatingDocument, variables, options) as Promise<any>;
     },
     GetUserRatings(variables: { first: number, filters: any }, options?: C): Promise<any> {
       return requester<any, any>(GetUserRatingsDocument, variables, options) as Promise<any>;
