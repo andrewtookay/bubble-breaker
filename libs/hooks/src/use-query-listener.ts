@@ -61,6 +61,7 @@ export const useMutationsListener = <TVars, TData>(mutationKey: MutationKey) => 
   React.useEffect(() => {
     const unsubscribe = mutationCache.subscribe(event => {
       if (event.mutation && isEqual(event.mutation.options.mutationKey, mutationKey)) {
+        //@ts-ignore
         if (event.mutation.state.status === 'loading') {
           setMutations(mutations => uniqBy([event.mutation, ...mutations], 'mutationId'));
           return;

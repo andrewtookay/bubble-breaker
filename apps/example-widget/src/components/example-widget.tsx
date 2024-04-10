@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import type { RootComponentProps } from '@akashaorg/typings/lib/ui';
 import Card from '@akashaorg/design-system-core/lib/components/Card';
 import Text from '@akashaorg/design-system-core/lib/components/Text';
 import { useGetBeamsByAuthorDidQuery } from '@akashaorg/ui-awf-hooks/lib/generated/apollo';
 import { useGetLogin } from '@akashaorg/ui-awf-hooks';
 import axios from 'axios';
 import getSDK from "@akashaorg/awf-sdk";
+import { GQL_EVENTS } from '@akashaorg/typings/lib/sdk';
+import { Eip1193Provider, ethers } from 'ethers';
+import { Subscription } from 'rxjs';
+import { useSignMessage } from 'wagmi';
 
-const ExampleWidget: React.FC<RootComponentProps> = () => {
+const ExampleWidget: React.FC = () => {
   const loginData = useGetLogin();
   const ethereumAddress = loginData?.data?.ethAddress;
   const authenticatedDID = loginData?.data?.id;
@@ -16,8 +19,9 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
   const [canMint, setCanMint] = useState(false);
   const [canUpdateMintable, setCanUpdateMintable] = useState(false);
   const sdk = getSDK();
+  const { signMessageAsync } = useSignMessage();
 
-  const { data, loading, error } = useGetBeamsByAuthorDidQuery({
+  const { data, refetch } = useGetBeamsByAuthorDidQuery({
     variables: { id: authenticatedDID, first: 100 },
   });
 
@@ -25,7 +29,41 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     return data && data.node && "akashaBeamList" in data.node ? data.node.akashaBeamList.edges : [];
   }, [data]);
 
-  const computeUserRating = async () => {
+  const createUserCreateBeamSub = (): Subscription => {
+    return sdk.api.globalChannel.subscribe({
+      next: (eventData: {
+        data: { uuid: string; [key: string]: unknown };
+        event: GQL_EVENTS.MUTATION;
+      }) => {
+        if (eventData.data && eventData.data.variables) {
+          console.log("in example-widget event: ", eventData.data.variables[0].type.type.name.value);
+          if (eventData.data.variables[0].type.type.name.value == "CreateAkashaBeamInput") {
+            // TODO_BB also listen for CreateUserRatingInput due to user rating own posts? should we even allow rating your own post?
+            refetch();
+          }
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    const userCreateBeamSub = createUserCreateBeamSub();
+    // recompute total rating every 20 seconds
+    const beamRefetchInterval = setInterval(() => {
+      refetch();
+    }, 20000);
+
+    return () => {
+      if (userCreateBeamSub) {
+        userCreateBeamSub.unsubscribe();
+      }
+      if (beamRefetchInterval) {
+        clearInterval(beamRefetchInterval);
+      }
+    };
+  }, []);
+
+  const computeTotalRating = async () => {
     let aiRating = 0;
 
     for (const beam of beams) {
@@ -36,16 +74,17 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
 
     console.log("total AI rating: ", aiRating);
     const beamIds = beams.map(beam => beam.node.id);
-    console.log("beamIds:", beamIds);
+    console.log("user beamIds:", beamIds);
     
     if (beamIds.length == 0) {
-      return 0;
+      setTotalRating(0);
+      return;
     }
 
     const response = await sdk.services.gql.client.GetUserRatings({ first: 100, filters: { where: { beamID: { in: beamIds }}}});
     console.log("userRatings: ", response.userRatingIndex.edges);
 
-    const ratingsByBeamId = response.userRatingIndex.edges.reduce((acc, rating) => {
+    const ratingsByBeamId = response.userRatingIndex.edges.reduce((acc: any, rating: any) => {
       if (!acc[rating.node.beamID]) {
          acc[rating.node.beamID] = [];
       }
@@ -57,7 +96,7 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     let userRating = 0;
     for (const beamId in ratingsByBeamId) {
       const ratings = ratingsByBeamId[beamId];
-      const totalRating = ratings.reduce((sum, rating) => sum + rating.userRating, 0);
+      const totalRating = ratings.reduce((sum: number, rating: any) => sum + rating.userRating, 0);
       const averageRating = parseInt((totalRating / ratings.length).toString());
       userRating += averageRating;
     }
@@ -67,14 +106,22 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     setTotalRating(aiRating + userRating);
   };
 
-  const handleUpdateMintableNfts = async () => {
+  // TODO_BB display error message and loading
+  const updateMintableNfts = async () => {
     try {
+      const signature = await signMessageAsync({ account: ethereumAddress, message: "Bubble Breaker" });
+      console.log("Wagmi signature:", signature);
+
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/update-mintable-nfts`, {
         address: ethereumAddress,
+        signature: signature,
         rating: totalRating
       });
-      console.log(response.data);
-      checkMintableNfts();
+
+      console.log("update mintable NFTs result:", response.data);
+      if (response.data.result == "updated") {
+        mintNfts();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -85,19 +132,20 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/can-mint`, {
         address: ethereumAddress
       });
-      console.log(response.data);
+      console.log("Check result:", response.data);
       setCanMint(response.data.mintableNFTs.length > 0);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleMintNfts = async () => {
+  const mintNfts = async () => {
     try {
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/mint-nft`, {
         address: ethereumAddress
       });
-      console.log(response.data.ipfsHashes);
+
+      console.log("Mint result:", response.data);
       setIpfsHashes((prevState) => [...prevState, ...response.data.ipfsHashes]);
       setCanMint(false);
     } catch (error) {
@@ -110,30 +158,25 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
       const response = await axios.post(`${process.env.API_ENDPOINT}/api/get-minted-nfts`, {
         addresses: [ethereumAddress]
       });
-      console.log(response.data[ethereumAddress]);
+
+      console.log("Update NFTs result:", response.data);
       setIpfsHashes(response.data[ethereumAddress]);
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    console.log(ipfsHashes);
-  }, [ipfsHashes]);
+  const signMessageEthers = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum as unknown as Eip1193Provider);
+    const signer = provider.getSigner();
+    const signature = await (await signer).signMessage("Bubble Breaker");
+    console.log("Ethers signature:", signature);
+    return signature;
+  };
 
-  useEffect(() => {
-    if (ethereumAddress) {
-      checkMintableNfts();
-      updateNfts();
-    }
-  }, [ethereumAddress]);
-
-  useEffect(() => {
-    computeUserRating();
-  }, [beams]);
-
-  useEffect(() => {
+  const updateCanUpdateMintable = () => {
     let numMintable = 0;
+
     if (totalRating > 60) {
       numMintable = 3;
     } else if (totalRating > 30) {
@@ -143,19 +186,39 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     }
 
     setCanUpdateMintable(numMintable > ipfsHashes.length);
+  };
+
+  useEffect(() => {
+    console.log("latest IPFS hashes:", ipfsHashes);
+  }, [ipfsHashes]);
+
+  useEffect(() => {
+    if (ethereumAddress) {
+      refetch();
+      checkMintableNfts();
+      updateNfts();
+    }
+  }, [ethereumAddress]);
+
+  useEffect(() => {
+    computeTotalRating();
+  }, [beams]);
+  
+  useEffect(() => {
+    updateCanUpdateMintable();
   }, [ipfsHashes, totalRating]);
 
   return (
     <Card customStyle="flex place-self-center">
-      <Text align="center">🔨🔥 GM ETH Bucharest! This is the Bubble Breaker! 🔥🔨</Text>
+      <Text align="center">💭 GM, Bubble Breaker! 🔨</Text>
       <div className='flex-column'>
         { totalRating != 0 &&
           <div className="nft-separator">
             <Text align="center">Total rating: {totalRating}</Text>
           </div>
         }
-        { canUpdateMintable && <button className='nft-button' onClick={handleUpdateMintableNfts}>Update Mintable NFTs</button> }
-        { canMint && <button className='nft-button' onClick={handleMintNfts}>Mint NFTs</button> }
+        { canUpdateMintable && <button className='nft-button' onClick={updateMintableNfts}>Mint NFTs</button> }
+        { canMint && <button className='nft-button' onClick={mintNfts}>Mint NFTs</button> }
         { ipfsHashes.length != 0 &&
           <>
             <div className="nft-separator">Your NFTs</div>
@@ -168,4 +231,5 @@ const ExampleWidget: React.FC<RootComponentProps> = () => {
     </Card>
   );
 };
+
 export default ExampleWidget;

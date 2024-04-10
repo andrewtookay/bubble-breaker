@@ -27,7 +27,7 @@ class Web3Connector {
   #w3modal: Web3Modal;
   #currentProviderType: string | undefined | null;
   readonly network = 'sepolia';
-  #networkId = '0x14a34';
+  #networkId = '0xaa36a7';
   // mapping for network name and ids
   readonly networkId = Object.freeze({
     mainnet: 1,
@@ -35,7 +35,7 @@ class Web3Connector {
     rinkeby: 4,
     goerli: 5,
     kovan: 42,
-    sepolia: 84532,
+    sepolia: 11155111,
   });
   private _config: AWF_Config;
   /*
@@ -78,8 +78,8 @@ class Web3Connector {
         chainId: this.networkId.sepolia,
         name: 'Ethereum',
         currency: 'ETH',
-        explorerUrl: 'https://sepolia-explorer.base.org',
-        rpcUrl: 'https://sepolia.base.org',
+        explorerUrl: 'https://sepolia.etherscan.io/',
+        rpcUrl: 'https://rpc2.sepolia.org',
       },
     ];
 

@@ -4,12 +4,12 @@ import ReactDOMClient from 'react-dom/client';
 import { withProviders } from '@akashaorg/ui-awf-hooks';
 import type { RootComponentProps } from '@akashaorg/typings/lib/ui';
 import ErrorLoader from '@akashaorg/design-system-core/lib/components/ErrorLoader';
-import ExampleWidget from './example-widget';
+import UserNftsWrapper from './user-nfts-wrapper';
 
 export const { bootstrap, mount, unmount } = singleSpaReact({
   React,
   ReactDOMClient,
-  rootComponent: withProviders(ExampleWidget),
+  rootComponent: withProviders(UserNftsWrapper),
   errorBoundary: (error, errorInfo, props: RootComponentProps) => {
     if (props.logger) {
       props.logger.error(`${error.message} -> ${errorInfo.componentStack}`);

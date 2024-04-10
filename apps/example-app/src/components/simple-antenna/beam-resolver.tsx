@@ -23,7 +23,7 @@ export type BeamResolverProps = {
 };
 const BeamResolver: React.FC<BeamResolverProps> = (props) => {
   const { beamId } = props;
-  const [ownRating, setOwnRating] = useState(0);
+  const [ownRating, setOwnRating] = useState(-1);
   const [ownRatingId, setOwnRatingId] = useState(null);
   const [userRating, setUserRating] = useState(-1);
 
@@ -48,7 +48,7 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
       setUserRating(-1);
     }
     if (ownRating != 0) {
-      setOwnRating(0);
+      setOwnRating(-1);
     }
   }, [beamId]);
 
@@ -173,11 +173,6 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
               {userRating != -1 && <span className='rating'>🧑&nbsp;<span>{userRating}</span></span>}
             </div>
             <RatingButton beamId={beamId} defaultRating={ownRating} ratingId={ownRatingId} onChange={() => computeUserRating()}></RatingButton>
-            {/* <Extension
-            name={`example-app-fav_${beamId}`}
-            extensionData={{
-              itemId: beamId,
-            }} /> */}
           </div>
         }
       >
