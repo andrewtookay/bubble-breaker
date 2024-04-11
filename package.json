@@ -12,7 +12,7 @@
     "composedb:deploy": "nx deploy-composites @akashaorg/composedb-models --verbose",
     "composedb:graphql": "nx start-graphql @akashaorg/composedb-models --verbose",
     "composedb:generate-data": "nx generate-data @akashaorg/composedb-models --verbose",
-    "apps:watch": "nx watch --projects=app-example,widget-example --includeDependentProjects -- nx build \\$NX_PROJECT_NAME"
+    "apps:watch": "nx watch --projects=app-example,widget-user-nfts --includeDependentProjects -- nx build \\$NX_PROJECT_NAME"
   },
   "private": true,
   "dependencies": {

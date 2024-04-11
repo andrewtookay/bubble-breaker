@@ -62,7 +62,7 @@ declare const __LOAD_LOCAL_SOURCES__: boolean;
     // pre-installed widgets;
     // layout widget is always loaded by default
     defaultWidgets: [
-      'example-widget',
+      'user-nfts-widget',
       '@akashaorg/ui-widget-topbar',
       '@akashaorg/ui-widget-sidebar',
     ],

@@ -15,7 +15,7 @@
     "start": {
       "dependsOn": [
         "app-example:build",
-        "widget-example:build",
+        "widget-user-nfts:build",
         "@akashaorg/awf-sdk:build",
         "prepare"
       ],

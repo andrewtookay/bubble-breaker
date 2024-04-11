@@ -36,7 +36,7 @@ const ExampleWidget: React.FC = () => {
         event: GQL_EVENTS.MUTATION;
       }) => {
         if (eventData.data && eventData.data.variables) {
-          console.log("in example-widget event: ", eventData.data.variables[0].type.type.name.value);
+          console.log("in user-nfts-widget event: ", eventData.data.variables[0].type.type.name.value);
           if (eventData.data.variables[0].type.type.name.value == "CreateAkashaBeamInput") {
             // TODO_BB also listen for CreateUserRatingInput due to user rating own posts? should we even allow rating your own post?
             refetch();
@@ -81,6 +81,7 @@ const ExampleWidget: React.FC = () => {
       return;
     }
 
+    // TODO_BB compute actual total user rating using pagination
     const response = await sdk.services.gql.client.GetUserRatings({ first: 100, filters: { where: { beamID: { in: beamIds }}}});
     console.log("userRatings: ", response.userRatingIndex.edges);
 
