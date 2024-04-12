@@ -15,11 +15,11 @@ import {
   useAccount,
   useReadContract,
   useWaitForTransactionReceipt,
-  useWriteContract
+  useWriteContract,
 } from 'wagmi';
 
 const contractConfig = {
-  address: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
+  address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
   abi,
 } as const;
 
@@ -39,7 +39,6 @@ const ExampleWidget: React.FC = () => {
 
   const { isConnected, address, chain, chainId } = useAccount();
   const [totalMinted, setTotalMinted] = React.useState(0n);
-
 
   const {
     data: hash,
@@ -222,29 +221,18 @@ const ExampleWidget: React.FC = () => {
     console.log('mint clicked');
     console.log(mounted, isConnected, isMinted, ethereumAddress);
     console.log(address, chain);
-    
+
     if (mounted && isConnected && !isMinted) {
       mint?.({
         ...contractConfig,
         functionName: 'safeMint',
         args: [
-           address,
-           'https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ',
-           'Breakey',
-        ]
-       });
+          address,
+          'https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ',
+          'Breakey',
+        ],
+      });
     }
-    // try {
-    //   const response = await axios.post(`${process.env.API_ENDPOINT}/api/mint-nft`, {
-    //     address: ethereumAddress
-    //   });
-
-    //   console.log("Mint result:", response.data);
-    //   setIpfsHashes((prevState) => [...prevState, ...response.data.ipfsHashes]);
-    //   setCanMint(false);
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
   const updateNfts = async () => {
@@ -340,10 +328,9 @@ const ExampleWidget: React.FC = () => {
             </div>
           </>
         )}
-        {
-        error && ( 
-        <div>Error: {(error as BaseError).shortMessage || error.message}</div> 
-      )} 
+        {error && (
+          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
+        )}
       </div>
     </Card>
   );

@@ -26,7 +26,7 @@ class Web3Connector {
   #wallet: ethers.Wallet | null;
   #w3modal: Web3Modal;
   #currentProviderType: string | undefined | null;
-  readonly network = 'sepolia';
+  readonly network = 'hardhat';
   #networkId = '0xaa36a7';
   // mapping for network name and ids
   readonly networkId = Object.freeze({
@@ -36,6 +36,7 @@ class Web3Connector {
     goerli: 5,
     kovan: 42,
     sepolia: 11155111,
+    hardhat: 31337,
   });
   private _config: AWF_Config;
   /*
@@ -61,7 +62,7 @@ class Web3Connector {
   constructor(
     @inject(TYPES.Log) logFactory: Logging,
     @inject(TYPES.EventBus) globalChannel: EventBus,
-    @inject(TYPES.Config) config: AWF_Config,
+    @inject(TYPES.Config) config: AWF_Config
   ) {
     this.#logFactory = logFactory;
     this.#log = this.#logFactory.create('Web3Connector');
@@ -75,6 +76,13 @@ class Web3Connector {
     }
     const chains = [
       {
+        chainId: this.networkId.hardhat,
+        name: 'Hardhat',
+        currency: 'ETH',
+        explorerUrl: 'http://127.0.0.1:8545',
+        rpcUrl: 'http://127.0.0.1:8545',
+      },
+      {
         chainId: this.networkId.sepolia,
         name: 'Ethereum',
         currency: 'ETH',
@@ -83,6 +91,19 @@ class Web3Connector {
       },
     ];
 
+    // sepolia ethers config
+    // const ethersConfig = defaultConfig({
+    //   metadata: {
+    //     name: 'AKASHA World',
+    //     description: 'AKASHA Web3Modal',
+    //     url: 'https://akasha.world',
+    //     icons: ['https://avatars.githubusercontent.com/u/9638191'],
+    //   },
+    //   defaultChainId: this.networkId.sepolia,
+    //   rpcUrl: 'https://rpc2.sepolia.org',
+    //   enableCoinbase: true,
+    // });
+
     const ethersConfig = defaultConfig({
       metadata: {
         name: 'AKASHA World',
@@ -90,8 +111,8 @@ class Web3Connector {
         url: 'https://akasha.world',
         icons: ['https://avatars.githubusercontent.com/u/9638191'],
       },
-      defaultChainId: this.networkId.sepolia,
-      rpcUrl: 'https://rpc2.sepolia.org',
+      defaultChainId: this.networkId.hardhat,
+      rpcUrl: 'http://127.0.0.1:8545',
       enableCoinbase: true,
     });
 
@@ -132,7 +153,7 @@ class Web3Connector {
     if (!this.#w3modal.getIsConnected()) {
       // eslint-disable-next-line no-async-promise-executor
       return new Promise(async (resolve, reject) => {
-        const unsubscribe = this.#w3modal.subscribeProvider(state => {
+        const unsubscribe = this.#w3modal.subscribeProvider((state) => {
           if (state.provider && state.isConnected && state.address) {
             resolve({ connected: true, unsubscribe });
           }
@@ -187,7 +208,7 @@ class Web3Connector {
    * This allows reacting to changes in wallet connection state.
    */
   #_registerWalletChangeEvents() {
-    this.#w3modal.subscribeProvider(event => {
+    this.#w3modal.subscribeProvider((event) => {
       if (event.isConnected) {
         const provider = this.#w3modal.getWalletProvider();
         if (provider) {
@@ -204,7 +225,10 @@ class Web3Connector {
         }
       } else {
         if (this.#web3Instance) {
-          this.#web3Instance.removeAllListeners(['accountsChanged', 'chainChanged']);
+          this.#web3Instance.removeAllListeners([
+            'accountsChanged',
+            'chainChanged',
+          ]);
         }
       }
     });
@@ -301,19 +325,25 @@ class Web3Connector {
     if (!this.network) {
       throw new Error('The required ethereum network was not set!');
     }
-    return createFormattedValue({ name: this.network, chainId: this.networkId[this.network] });
+    return createFormattedValue({
+      name: this.network,
+      chainId: this.networkId[this.network],
+    });
   }
 
   async switchToRequiredNetwork() {
     if (this.#web3Instance instanceof ethers.BrowserProvider) {
-      const result = await this.#web3Instance.send('wallet_switchEthereumChain', [
-        { chainId: this.#networkId },
-      ]);
+      const result = await this.#web3Instance.send(
+        'wallet_switchEthereumChain',
+        [{ chainId: this.#networkId }]
+      );
       return createFormattedValue(result);
     }
     const err: Error & {
       code?: number;
-    } = new Error(`Method wallet_switchEthereumChain not supported on the current provider`);
+    } = new Error(
+      `Method wallet_switchEthereumChain not supported on the current provider`
+    );
     err.code = PROVIDER_ERROR_CODES.WrongNetwork;
     throw err;
   }
@@ -340,7 +370,7 @@ class Web3Connector {
     const network = this.#w3modal.getState();
     if (network.selectedNetworkId !== this.networkId[this.network]) {
       const error: Error & { code?: number } = new Error(
-        `Please change the ethereum network to ${this.network}!`,
+        `Please change the ethereum network to ${this.network}!`
       );
       error.code = PROVIDER_ERROR_CODES.WrongNetwork;
       throw error;
@@ -371,7 +401,7 @@ class Web3Connector {
     if (!provider.on) {
       throw new Error('Provider does not support on method');
     }
-    provider.on('accountsChanged', ethAddress => {
+    provider.on('accountsChanged', (ethAddress) => {
       this.#log.warn(`ethereum address changed ${ethAddress}`);
       this.#globalChannel.next({
         data: {
@@ -380,7 +410,7 @@ class Web3Connector {
         event: WEB3_EVENTS.ACCOUNT_CHANGED,
       });
     });
-    provider.on('chainChanged', chainId => {
+    provider.on('chainChanged', (chainId) => {
       this.#log.warn(`ethereum chain ID changed ${chainId}`);
       this.#globalChannel.next({
         data: {

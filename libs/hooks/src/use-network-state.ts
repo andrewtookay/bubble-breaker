@@ -128,7 +128,7 @@ const getRequiredNetwork = async () => {
 export function useRequiredNetwork() {
   const [data, setData] = useState<{
     name: string;
-    chainId: 11155111;
+    chainId: 31337;
   }>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
