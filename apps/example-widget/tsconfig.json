@@ -7,11 +7,6 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react"
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./src/__mocks__/*",
-    "./src/__tests__/*"
-  ]
+  "include": ["./src/**/*", "src/**/*.json"],
+  "exclude": ["./src/__mocks__/*", "./src/__tests__/*"]
 }

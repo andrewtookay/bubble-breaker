@@ -159,12 +159,16 @@ export function useRequiredNetwork() {
 export function useNetworkChangeListener() {
   const [currentNetwork, setCurrentNetwork] = React.useState(null);
   const globalChannel = getSDK().api.globalChannel;
-  const call = globalChannel.pipe(filter(data => data.event === WEB3_EVENTS.CHAIN_CHANGED));
-  const sub = call.subscribe((event: GlobalEventBusData<{ chainId: number }>) => {
-    if (!currentNetwork || currentNetwork.chainId !== event.data?.chainId) {
-      setCurrentNetwork(event.data);
+  const call = globalChannel.pipe(
+    filter((data) => data.event === WEB3_EVENTS.CHAIN_CHANGED)
+  );
+  const sub = call.subscribe(
+    (event: GlobalEventBusData<{ chainId: number }>) => {
+      if (!currentNetwork || currentNetwork.chainId !== event.data?.chainId) {
+        setCurrentNetwork(event.data);
+      }
     }
-  });
+  );
   const unsubscribe = () => {
     sub.unsubscribe();
   };
