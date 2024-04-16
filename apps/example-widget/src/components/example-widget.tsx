@@ -137,7 +137,7 @@ const ExampleWidget: React.FC = () => {
     console.log('user beamIds:', beamIds);
 
     if (beamIds.length == 0) {
-      setTotalRating(60);
+      setTotalRating(0);
       return;
     }
 
@@ -309,11 +309,6 @@ const ExampleWidget: React.FC = () => {
             Mint NFTs
           </button>
         )}
-        {
-          <button className="nft-button" onClick={mintNfts}>
-            Mint NFTs
-          </button>
-        }
         {ipfsHashes.length != 0 && (
           <>
             <div className="nft-separator">Your NFTs</div>
