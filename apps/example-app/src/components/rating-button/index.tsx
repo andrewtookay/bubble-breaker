@@ -30,13 +30,15 @@ const RatingButton: React.FC<RatingProps> = (props) => {
 
   let stars = Array(count || DEFAULT_COUNT).fill(icon || DEFAULT_ICON);
 
-  const handleClick = async (rating) => {
+  const handleClick = async (rating: number) => {
     setRating(rating);
+
     if (defaultRating == -1) {
-      const response = await sdk.services.gql.client.CreateUserRating({i: {content: {beamID: beamId, userRating: rating}}});
+      await sdk.services.gql.client.CreateUserRating({i: { content: { beamID: beamId, userRating: rating }}});
     } else {
-      const response = await sdk.services.gql.client.UpdateUserRating({i: { id: ratingId, content: { beamID: beamId, userRating: rating }}});
+      await sdk.services.gql.client.UpdateUserRating({i: { id: ratingId, content: { beamID: beamId, userRating: rating }}});
     }
+    
     onChange();
   };
 

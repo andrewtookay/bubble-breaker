@@ -57,7 +57,7 @@
       "path": "./apps/example-app"
     },
     {
-      "path": "./apps/example-widget"
+      "path": "./apps/user-nfts-widget"
     }
   ],
   "exclude": [

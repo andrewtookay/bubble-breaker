@@ -81,9 +81,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@akashaorg/widget-example@workspace:apps/example-widget":
+"@akashaorg/widget-user-nfts@workspace:apps/user-nfts-widget":
   version: 0.0.0-use.local
-  resolution: "@akashaorg/widget-example@workspace:apps/example-widget"
+  resolution: "@akashaorg/widget-user-nfts@workspace:apps/user-nfts-widget"
   languageName: unknown
   linkType: soft
 

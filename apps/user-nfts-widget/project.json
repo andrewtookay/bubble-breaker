@@ -1,7 +1,7 @@
 {
-  "name": "widget-example",
+  "name": "widget-user-nfts",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/example-widget/src",
+  "sourceRoot": "apps/user-nfts-widget/src",
   "projectType": "application",
   "targets": {
     "prepare": {
@@ -12,7 +12,7 @@
       ],
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "apps/example-widget",
+        "cwd": "apps/user-nfts-widget",
         "command": "tsc --build"
       }
     },
@@ -20,12 +20,12 @@
       "dependsOn": ["prepare"],
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "apps/example-widget",
+        "cwd": "apps/user-nfts-widget",
         "command": "webpack --config webpack.config.cjs"
       },
       "outputs": [
         "{projectRoot}/lib",
-        "{workspaceRoot}/world/dist/apps/example-widget"
+        "{workspaceRoot}/world/dist/apps/user-nfts-widget"
       ]
     }
   },

@@ -47,6 +47,18 @@
   background: linear-gradient(to left, #f9f8eb, #becaa7);
 }
 
+.bubble-article img {
+  border-radius: 12px;
+}
+
+.bubble-article .article-title {
+  margin: 8px 0px;
+}
+
+.bubble-article .article-body {
+  margin-top: 20px;
+}
+
 .bubble-breaker {
   background: linear-gradient(to left, #b98ae0, #75c6d4);
 }
@@ -115,4 +127,11 @@
   color: white;
   margin: 4px 0px;
   width: 200px;
+}
+
+.article-category {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background-color: cornsilk;
+  margin-right: 4px;
 }

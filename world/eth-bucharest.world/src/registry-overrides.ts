@@ -62,9 +62,9 @@ const overrides = [
   },
   // example area
   {
-    name: 'example-widget',
+    name: 'user-nfts-widget',
     integrationType: INTEGRATION_TYPES.WIDGET,
-    sources: [`/apps/example-widget/index.js`],
+    sources: [`/apps/user-nfts-widget/index.js`],
     ...missingRequiredFields,
   },
   {
