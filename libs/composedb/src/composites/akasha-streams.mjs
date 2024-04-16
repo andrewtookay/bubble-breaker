@@ -109,7 +109,16 @@ type AkashaIndexedStream @createModel(accountRelation: LIST, description: "Index
   indexValue: String! @string(minLength:2, maxLength: 90)
 }
 
-type UserRating @createModel(accountRelation: LIST, description: "Moderated Beams list v0.1") @createIndex(fields:[{path: "userRating"},{path: "beamID"}]){
+type Article @createModel(accountRelation: LIST, description: "Article list v0.1") @createIndex(fields:[{path: "article"}]){
+  title: string!
+  tags: [string!]! @list(maxLength: 10) @string(minLength:3, maxLength: 32)
+  imageLink: string!
+  content: string!
+  date: Date!
+  creator: DID! @documentAccount
+}
+
+type UserRating @createModel(accountRelation: LIST, description: "User Rating list v0.1") @createIndex(fields:[{path: "userRating"},{path: "beamID"}]){
   beamID: StreamID! @documentReference(model: "AkashaBeam")
   userRating: Int
   voter: DID! @documentAccount
