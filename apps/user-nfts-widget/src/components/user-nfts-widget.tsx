@@ -233,7 +233,7 @@ const ExampleWidget: React.FC = () => {
         ],
       });
 
-      setIpfsHashes(['https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ']);
+      setIpfsHashes((prevState) => [...prevState, ...['https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ']]);
       setCanMint(false);
     }
   };
