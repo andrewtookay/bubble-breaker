@@ -42,10 +42,9 @@ const ExampleWidget: React.FC = () => {
 
   const {
     data: hash,
-    error,
-    writeContract: mint,
-    isPending: isMintLoading,
-    isSuccess: isMintStarted,
+    writeContract: mintContract,
+    isPending: isMintPending,
+    isSuccess: hasMintSucceded,
     error: mintError,
   } = useWriteContract();
 
@@ -223,18 +222,16 @@ const ExampleWidget: React.FC = () => {
     console.log(address, chain);
 
     if (mounted && isConnected && !isMinted) {
-      mint?.({
+      // TODO_BB handle the different types
+      mintContract?.({
         ...contractConfig,
         functionName: 'safeMint',
         args: [
           address,
-          'https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ',
+          'QmQyrxVTrfMi8ztRiLhpTmcNhchmUDXZbsjnxz6RUcftyV',
           'Breakey',
         ],
       });
-
-      setIpfsHashes((prevState) => [...prevState, ...['https://bronze-famous-coyote-943.mypinata.cloud/ipfs/QmQgqgvA6d1tgmSYQaNWe4WMTyGuGVPxtmnxkYhudvgGoZ']]);
-      setCanMint(false);
     }
   };
 
@@ -298,6 +295,21 @@ const ExampleWidget: React.FC = () => {
     updateCanUpdateMintable();
   }, [ipfsHashes, totalRating]);
 
+  useEffect(() => {
+    console.log("mint contract error: ", mintError);
+  }, [mintError]);
+
+  useEffect(() => {
+    console.log("mint contract pending: ", isMintPending);
+  }, [isMintPending]);
+
+  useEffect(() => {
+    console.log("mint contract success: ", hasMintSucceded);
+    // TODO_BB add loading effect for the pending transaction, then updateNfts
+    updateNfts();
+    setCanMint(false);
+  }, [hasMintSucceded]);
+
   return (
     <Card customStyle="flex place-self-center">
       <Text align="center">💭 GM, Bubble Breaker! 🔨</Text>
@@ -326,8 +338,8 @@ const ExampleWidget: React.FC = () => {
             </div>
           </>
         )}
-        {error && (
-          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
+        {mintError && (
+          <div>Error: {(mintError as BaseError).shortMessage || mintError.message}</div>
         )}
       </div>
     </Card>
