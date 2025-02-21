@@ -83,7 +83,7 @@ function fromBinary(binary: string) {
  * Utility to map reflect entry data
  */
 export const mapReflectEntryData = (
-  reflection?: Pick<AkashaReflect, 'id' | 'active' | 'createdAt' | 'nsfw' | 'content'> & {
+  reflection?: Pick<AkashaReflect, 'id' | 'active' | 'createdAt' | 'nsfw' | 'content'  | 'aiRating' | 'approval' | 'userRating'> & {
     author: { id: string };
     beam?: { id: string };
   },
@@ -97,6 +97,9 @@ export const mapReflectEntryData = (
     createdAt: reflection.createdAt,
     content: reflection.content,
     nsfw: reflection?.nsfw,
+    approval: reflection?.approval,
+    aiRating: reflection?.aiRating,
+    userRating: reflection?.userRating,
     beamID: reflection.beam?.id,
   };
 };
@@ -107,7 +110,7 @@ export const mapReflectEntryData = (
 export const mapBeamEntryData = (
   beam?: Pick<
     AkashaBeam,
-    'id' | 'active' | 'createdAt' | 'content' | 'nsfw' | 'tags' | 'reflectionsCount'
+    'id' | 'active' | 'createdAt' | 'content' | 'nsfw' | 'tags' | 'reflectionsCount' | 'aiRating' | 'approval' | 'userRating'
   > & {
     author: { id: string };
   },
@@ -121,6 +124,9 @@ export const mapBeamEntryData = (
     createdAt: beam.createdAt,
     content: beam.content,
     nsfw: beam?.nsfw,
+    approval: beam?.approval,
+    aiRating: beam?.aiRating,
+    userRating: beam?.userRating,
     tags: beam?.tags
       ?.filter(labeledTag => labeledTag.labelType === sdk.services.gql.labelTypes.TAG)
       .map(labeledTag => labeledTag.value),

@@ -2,6 +2,11 @@
 
 ---
 
+// CreateAkashaBeamInput change
+// CreateBeamMutation change
+// AkashaReflect change
+// AkashaBeamInput change
+
 #### _Initial Setup Guide_
 
 1. [Pre-requisites](#pre-requisites)

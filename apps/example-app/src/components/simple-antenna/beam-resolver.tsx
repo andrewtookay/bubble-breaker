@@ -103,6 +103,7 @@ const BeamResolver: React.FC<BeamResolverProps> = (props) => {
    */
   const processedEntryData = mapBeamEntryData(entryData);
 
+  //console.log(beamReq, entryData, processedEntryData);
   /**
    * fetch the profile data of the author of the beam
    */

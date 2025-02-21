@@ -23,6 +23,9 @@ type AkashaContentBlock @createModel(accountRelation: LIST, description: "AKASHA
   appVersion: AkashaAppRelease! @relationDocument(property: "appVersionID")
   version: CommitID! @documentVersion
   active: Boolean!
+  approval: Boolean
+  aiRating: Int
+  userRating: Int
   createdAt: DateTime!
   author: DID! @documentAccount
   kind: BlockDef!

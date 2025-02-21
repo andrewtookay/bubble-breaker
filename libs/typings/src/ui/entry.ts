@@ -79,6 +79,9 @@ export type EntryData = {
   authorId: string;
   createdAt: string;
   nsfw?: boolean;
+  approval: boolean;
+  aiRating: number;
+  userRating: number;
   tags?: string[];
 };
 

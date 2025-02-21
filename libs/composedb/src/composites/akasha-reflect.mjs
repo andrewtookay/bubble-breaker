@@ -21,6 +21,9 @@ type AkashaReflect @createModel(accountRelation: LIST, description: "A Reflectio
     reflection: StreamID
     isReply: Boolean
     active: Boolean!
+    approval: Boolean
+    aiRating: Int
+    userRating: Int
     createdAt: DateTime!
     nsfw: Boolean
 }`

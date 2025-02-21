@@ -31,6 +31,9 @@ type AkashaBeam @createModel(accountRelation: LIST, description: "AKASHA Beam v0
   mentions: [DID] @list(maxLength: 10)
   version: CommitID! @documentVersion
   embeddedStream: EmbeddedType
+  approval: Boolean
+  aiRating: Int
+  userRating: Int
   active: Boolean!
   createdAt: DateTime!
   nsfw: Boolean

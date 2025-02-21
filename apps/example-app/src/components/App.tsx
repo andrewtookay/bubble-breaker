@@ -20,6 +20,8 @@ const ExampleAppRoot: React.FC<RootComponentProps> = (props) => {
     variables: { first: 10, sorting: { createdAt: SortOrder.Desc } },
   });
 
+  // process the beams and reputation computation here and trigger the smart contract minting
+
   const beams = React.useMemo(() => {
     return data?.akashaBeamIndex?.edges || [];
   }, [data]);
